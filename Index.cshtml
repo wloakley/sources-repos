@@ -1,30 +1,53 @@
-﻿@page
-@model IndexModel
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityUser>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
 @{
-    ViewData["Title"] = "Profile";
-    ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h4>@ViewData["Title"]</h4>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<br />
+<div> class ="border backgroundWhite"</div>
 <div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" disabled />
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.PhoneNumber"></label>
-                <input asp-for="Input.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="btn btn-default">Save</button>
-        </form>
+    <div class="col-6">
+        <h2 class="text-info"> User List</h2>
     </div>
-</div>
+    <br />
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+ //   @if (Model.Count() > 0)
+    {
+        <table class="table table-striped border">
+            <tr class="table-secondary">
+                <th>
+                    @Html.DisplayNameFor(m => m.NormalizedUserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Email)
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(m => item.NormalizedUserName)
+        </td>
+        <td>
+            @Html.DisplayFor(m => item.Email)
+    </td>
+    <td>
+        @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now) {
+        <a>
+            class="btn btn-success text-white" asp-action="Lock" asp-route-id= "@item.Id">
+            <i class="fas fa-lock-open"></i>
+        </a>
+        }
+        else{
+        <a>
+            class="btn btn-danger text-white" asp-action="Unlock" asp-route-id= "@item.Id">
+            <i class="fas fa-lock-lock"></i>
+        </a> }
+    </td>
+</tr>
+}
+</table>
 }
